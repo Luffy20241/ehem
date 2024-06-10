@@ -1,4 +1,4 @@
-from urllib.parse import urlparse
+yfrom urllib.parse import urlparse
 from base64 import b64encode
 from datetime import datetime
 from os import path as ospath
@@ -77,8 +77,8 @@ PAGE_NO = 1
 STATUS_LIMIT = 4
 
 class MirrorStatus:
-    STATUS_UPLOADING = "Uploading"
-    STATUS_DOWNLOADING = "Downloading"
+    STATUS_UPLOADING = "ᴜᴘʟᴏᴀᴅɪɴɢ"
+    STATUS_DOWNLOADING = "ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ"
     STATUS_CLONING = "Cloning"
     STATUS_QUEUEDL = "DL queued"
     STATUS_QUEUEUP = "UL queued"
@@ -195,7 +195,7 @@ def source(self):
 
 
 def get_readable_message():
-    msg = '</blockquote><b>𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚅𝙴𝙶𝙰𝙿𝚄𝙽𝙺</b></blockquote>\n\n'
+    msg = '<blockquote><b>𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚅𝙴𝙶𝙰𝙿𝚄𝙽𝙺</b></blockquote>\n\n'
     button = None
     tasks = len(download_dict)
     currentTime = get_readable_time(time() - botStartTime)
@@ -208,27 +208,27 @@ def get_readable_message():
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
-        msg += f"<blockquote><b>{download.status()}:𝚃𝙰𝚂𝙺𝚂 by {source(download)} </b></blockquote>\n"
+        msg += f"<blockquote><b>{download.status()}:ᴛᴀs͏ᴋs͏ ʙʏ {source(download)} </b></blockquote>\n"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_PROCESSING]:
             msg += f"<blockquote><code>{progress_bar(download.progress())}</code> {download.progress()}"
             msg += f"\n{download.processed_bytes()} of {download.size()}"
-            msg += f"\n𝚂𝙿𝙴𝙴𝙳: {download.speed()}"
-            msg += f'\n𝙴𝚂𝚃𝙸𝙼𝙰𝚃𝙴𝙳: {download.eta()}'
+            msg += f"\ns͏ᴘᴇᴇᴅ: {download.speed()}"
+            msg += f'\nᴇs͏ᴛɪᴍᴀᴛᴇᴅ: {download.eta()}'
             if hasattr(download, 'seeders_num'):
                 try:
-                    msg += f"\n𝚂𝙴𝙴𝙳𝙴𝚁𝚂: {download.seeders_num()} | 𝙻𝙴𝙴𝙲𝙷𝙴𝚁𝚂: {download.leechers_num()}"
+                    msg += f"\ns͏ᴇᴇᴅᴇʀs͏: {download.seeders_num()} | ʟᴇᴇᴄʜᴇʀs͏: {download.leechers_num()}"
                 except:
                     pass
         elif download.status() == MirrorStatus.STATUS_SEEDING:
-            msg += f"<blockquote>𝚂𝙸𝚉𝙴: {download.size()}"
-            msg += f"\n𝚂𝙿𝙴𝙴𝙳: {download.upload_speed()}"
-            msg += f"\n𝚄𝙿𝙻𝙾𝙰𝙳𝙴𝙳: {download.uploaded_bytes()}"
-            msg += f"\n𝚁𝙰𝚃𝙸𝙾: {download.ratio()}"
-            msg += f"\n𝚃𝙸𝙼𝙴: {download.seeding_time()}"
+            msg += f"<blockquote>s͏ɪᴢᴇ: {download.size()}"
+            msg += f"\ns͏ᴘᴇᴇᴅ: {download.upload_speed()}"
+            msg += f"\nᴜᴘʟᴏᴀᴅᴇᴅ: {download.uploaded_bytes()}"
+            msg += f"\nʀᴀᴛɪᴏ: {download.ratio()}"
+            msg += f"\nᴛɪᴍᴇ: {download.seeding_time()}"
         else:
-            msg += f"<blockquote>𝚂𝙸𝚉𝙴: {download.size()}"
-        msg += f"\n𝙴𝙻𝙰𝙿𝚂𝙴𝙳: {get_readable_time(time() - download.message.date.timestamp())}</blockquote>"
-        msg += f"\n<blockquote>/𝚜𝚝𝚘𝚙_{download.gid()[:8]}</blockquote>\n\n"
+            msg += f"<blockquote>s͏ɪᴢᴇ: {download.size()}"
+        msg += f"\nᴇʟᴀᴘs͏ᴇᴅ: {get_readable_time(time() - download.message.date.timestamp())}</blockquote>"
+        msg += f"\n<blockquote>/s͏ᴛᴏᴘ_{download.gid()[:8]}</blockquote>\n\n"
     if len(msg) == 0:
         return None, None
     dl_speed = 0
@@ -247,11 +247,11 @@ def get_readable_message():
         buttons.ibutton(f"{PAGE_NO}/{PAGES}", "status ref")
         buttons.ibutton("Next", "status nex")
         button = buttons.build_menu(3)
-    msg += f"<b>☯︎ 𝚃𝙰𝚂𝙺𝚂</b>: {tasks}{bmax_task}"
-    msg += f"\n<b>☯︎ 𝙱𝙾𝚃 𝚄𝙿𝚃𝙸𝙼𝙴</b>: {currentTime}"
-    msg += f"\n<b>☯︎ 𝙵𝚁𝙴𝙴 𝙳𝙸𝚂𝙺 𝚂𝙿𝙰𝙲𝙴</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
-    msg += f"\n<b>☯︎ 𝚄𝙿𝙻𝙾𝙰𝙳𝙸𝙽𝙶 𝚂𝙿𝙴𝙴𝙳</b>: {get_readable_file_size(up_speed)}/s"
-    msg += f"\n<b>☯︎ 𝙳𝙾𝚆𝙽𝙻𝙾𝙰𝙳𝙸𝙽𝙶 𝚂𝙿𝙴𝙴𝙳</b>: {get_readable_file_size(dl_speed)}/s"
+    msg += f"<b>𖣘︎ ᴛᴀs͏ᴋs͏</b>: {tasks}{bmax_task}"
+    msg += f"\n<b>𖣘︎ ʙᴏᴛ ᴜᴘᴛɪᴍᴇ</b>: {currentTime}"
+    msg += f"\n<b>𖣘︎ ғʀᴇᴇ ᴅɪs͏ᴋ s͏ᴘᴀᴄᴇ</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
+    msg += f"\n<b>𖣘︎ ᴜᴘʟᴏᴀᴅɪɴɢ s͏ᴘᴇᴇᴅ</b>: {get_readable_file_size(up_speed)}/s"
+    msg += f"\n<b>𖣘︎ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ s͏p͏e͏e͏d͏</b>: {get_readable_file_size(dl_speed)}/s"
     return msg, button
 
 
