@@ -1,4 +1,4 @@
-yfrom urllib.parse import urlparse
+from urllib.parse import urlparse
 from base64 import b64encode
 from datetime import datetime
 from os import path as ospath
