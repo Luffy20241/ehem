@@ -24,7 +24,7 @@ from pyrogram.types import BotCommand
 from pyrogram.errors import PeerIdInvalid
 
 from bot.helper.ext_utils.db_handler import DbManager
-from bot import OWNER_ID, bot_name, DATABASE_URL, LOGGER, get_client, aria2, download_dict, download_dict_lock, botStartTime, user_data, config_dict, bot_loop, extra_buttons, user
+from bot import OWNER_ID, bot_name, DATABASE_URL, LOGGER, aria2, download_dict, download_dict_lock, botStartTime, user_data, config_dict, bot_loop, extra_buttons, user
 from bot.helper.telegram_helper.bot_commands import BotCommands
 from bot.helper.telegram_helper.button_build import ButtonMaker
 from bot.helper.ext_utils.telegraph_helper import telegraph
@@ -77,8 +77,8 @@ PAGE_NO = 1
 STATUS_LIMIT = 4
 
 class MirrorStatus:
-    STATUS_UPLOADING = "ᴜᴘʟᴏᴀᴅɪɴɢ"
-    STATUS_DOWNLOADING = "ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ"
+    STATUS_UPLOADING = "Uploading"
+    STATUS_DOWNLOADING = "Downloading"
     STATUS_CLONING = "Cloning"
     STATUS_QUEUEDL = "DL queued"
     STATUS_QUEUEUP = "UL queued"
@@ -110,14 +110,18 @@ def isMkv(file):
     return file.lower().endswith('mkv')
 
 
-def get_readable_file_size(size_in_bytes):
+def get_readable_file_size(size_in_bytes: int):
     if size_in_bytes is None:
-        return '0B'
+        return "0B"
     index = 0
     while size_in_bytes >= 1024 and index < len(SIZE_UNITS) - 1:
         size_in_bytes /= 1024
         index += 1
-    return f'{size_in_bytes:.2f}{SIZE_UNITS[index]}' if index > 0 else f'{size_in_bytes}B'
+    return (
+        f"{size_in_bytes:.2f}{SIZE_UNITS[index]}"
+        if index > 0
+        else f"{size_in_bytes:.2f}B"
+    )
 
 
 async def getDownloadByGid(gid):
@@ -195,7 +199,7 @@ def source(self):
 
 
 def get_readable_message():
-    msg = '<blockquote><b>𝙿𝙾𝚆𝙴𝚁𝙴𝙳 𝙱𝚈 𝚅𝙴𝙶𝙰𝙿𝚄𝙽𝙺</b></blockquote>\n\n'
+    msg = '<blockquote><b>🅥🅔🅖🅐🅟🅤🅝🅚</b></blockquote>\n\n'
     button = None
     tasks = len(download_dict)
     currentTime = get_readable_time(time() - botStartTime)
@@ -208,50 +212,38 @@ def get_readable_message():
         globals()['STATUS_START'] = STATUS_LIMIT * (PAGES - 1)
         globals()['PAGE_NO'] = PAGES
     for download in list(download_dict.values())[STATUS_START:STATUS_LIMIT+STATUS_START]:
-        msg += f"<blockquote><b>{download.status()}:ᴛᴀs͏ᴋs͏ ʙʏ {source(download)} </b></blockquote>\n"
+        msg += f"<b>{download.status()}:𝖳𝖺𝗌𝗄𝗌 𝖡𝗒 {source(download)}\n"
         if download.status() not in [MirrorStatus.STATUS_SPLITTING, MirrorStatus.STATUS_SEEDING, MirrorStatus.STATUS_PROCESSING]:
             msg += f"<blockquote><code>{progress_bar(download.progress())}</code> {download.progress()}"
             msg += f"\n{download.processed_bytes()} of {download.size()}"
-            msg += f"\ns͏ᴘᴇᴇᴅ: {download.speed()}"
-            msg += f'\nᴇs͏ᴛɪᴍᴀᴛᴇᴅ: {download.eta()}'
+            msg += f"\nSpeed: {download.speed()}"
+            msg += f'\nEstimated: {download.eta()}'
             if hasattr(download, 'seeders_num'):
                 try:
-                    msg += f"\ns͏ᴇᴇᴅᴇʀs͏: {download.seeders_num()} | ʟᴇᴇᴄʜᴇʀs͏: {download.leechers_num()}"
+                    msg += f"\nSeeders: {download.seeders_num()} | Leechers: {download.leechers_num()}"
                 except:
                     pass
         elif download.status() == MirrorStatus.STATUS_SEEDING:
-            msg += f"<blockquote>s͏ɪᴢᴇ: {download.size()}"
-            msg += f"\ns͏ᴘᴇᴇᴅ: {download.upload_speed()}"
-            msg += f"\nᴜᴘʟᴏᴀᴅᴇᴅ: {download.uploaded_bytes()}"
-            msg += f"\nʀᴀᴛɪᴏ: {download.ratio()}"
-            msg += f"\nᴛɪᴍᴇ: {download.seeding_time()}"
+            msg += f"<blockquote>Size: {download.size()}"
+            msg += f"\nSpeed: {download.upload_speed()}"
+            msg += f"\nUploaded: {download.uploaded_bytes()}"
+            msg += f"\nRatio: {download.ratio()}"
+            msg += f"\nTime: {download.seeding_time()}"
         else:
-            msg += f"<blockquote>s͏ɪᴢᴇ: {download.size()}"
-        msg += f"\nᴇʟᴀᴘs͏ᴇᴅ: {get_readable_time(time() - download.message.date.timestamp())}</blockquote>"
-        msg += f"\n<blockquote>/s͏ᴛᴏᴘ_{download.gid()[:8]}</blockquote>\n\n"
+            msg += f"<blockquote>Size: {download.size()}"
+        msg += f"\nElapsed: {get_readable_time(time() - download.message.date.timestamp())}</blockquote>"
+        msg += f"\n<blockquote>/stop_{download.gid()[:8]}</blockquote>\n\n"
     if len(msg) == 0:
         return None, None
-    dl_speed = 0
-    up_speed = 0
-    for download in download_dict.values():
-        tstatus = download.status()
-        if tstatus == MirrorStatus.STATUS_DOWNLOADING:
-            dl_speed += text_to_bytes(download.speed())
-        elif tstatus == MirrorStatus.STATUS_UPLOADING:
-            up_speed += text_to_bytes(download.speed())
-        elif tstatus == MirrorStatus.STATUS_SEEDING:
-            up_speed += text_to_bytes(download.upload_speed())
     if tasks > STATUS_LIMIT:
         buttons = ButtonMaker()
         buttons.ibutton("Prev", "status pre")
         buttons.ibutton(f"{PAGE_NO}/{PAGES}", "status ref")
         buttons.ibutton("Next", "status nex")
         button = buttons.build_menu(3)
-    msg += f"<b>𖣘︎ ᴛᴀs͏ᴋs͏</b>: {tasks}{bmax_task}"
-    msg += f"\n<b>𖣘︎ ʙᴏᴛ ᴜᴘᴛɪᴍᴇ</b>: {currentTime}"
-    msg += f"\n<b>𖣘︎ ғʀᴇᴇ ᴅɪs͏ᴋ s͏ᴘᴀᴄᴇ</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
-    msg += f"\n<b>𖣘︎ ᴜᴘʟᴏᴀᴅɪɴɢ s͏ᴘᴇᴇᴅ</b>: {get_readable_file_size(up_speed)}/s"
-    msg += f"\n<b>𖣘︎ ᴅᴏᴡɴʟᴏᴀᴅɪɴɢ s͏p͏e͏e͏d͏</b>: {get_readable_file_size(dl_speed)}/s"
+    msg += f"<b>𖣘︎ Tasks</b>: {tasks}{bmax_task}"
+    msg += f"\n<b>𖣘︎ Bot uptime</b>: {currentTime}"
+    msg += f"\n<b>𖣘︎ Free disk space</b>: {get_readable_file_size(disk_usage('/usr/src/app/downloads/').free)}"
     return msg, button
 
 
