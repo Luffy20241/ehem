@@ -358,7 +358,7 @@ class MirrorLeechListener:
             msg += f'<b>• User ID: </b><code>{self.message.from_user.id}</code></blockquote>\n\n'
             if not files:
                 if self.isPrivate:
-                    msg += '<b>Files have not been sent for an unspecified reason</b>'
+                    #msg += '<b>Files have not been sent for an unspecified reason</b>'
                 await sendMessage(self.message, msg)
             else:
                 attachmsg = True
