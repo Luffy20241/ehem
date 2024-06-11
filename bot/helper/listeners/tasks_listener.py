@@ -341,7 +341,7 @@ class MirrorLeechListener:
         user_id = self.message.from_user.id
         name, _ = await process_file(name, user_id, isMirror=not self.isLeech)
         user_dict = user_data.get(user_id, {})
-        msg = f'<blockquote>𝗧𝗔𝗦𝗞 𝗛𝗔𝗦 𝗕𝗘𝗘𝗡 𝗦𝗘𝗡𝗧 𝗧𝗢 𝗬𝗢𝗨𝗥 𝗗𝗠</blockquote>\n\n'
+        #msg = f'<blockquote>𝗧𝗔𝗦𝗞 𝗛𝗔𝗦 𝗕𝗘𝗘𝗡 𝗦𝗘𝗡𝗧 𝗧𝗢 𝗬𝗢𝗨𝗥 𝗗𝗠</blockquote>\n\n'
         msg += f'<blockquote><b>• Size: </b>{get_readable_file_size(size)}\n'
         msg += f'<b>• Elapsed: </b>{get_readable_time(time() - self.message.date.timestamp())}\n'
         LOGGER.info(f'Task Done: {name}')
@@ -358,7 +358,7 @@ class MirrorLeechListener:
             msg += f'<b>• User ID: </b><code>{self.message.from_user.id}</code></blockquote>\n\n'
             if not files:
                 if self.isPrivate:
-                    #msg += '<b>Files have not been sent for an unspecified reason</b>'
+                    msg += '<blockquote><b>Files have not been sent for an unspecified reason</b></blockquote>'
                 await sendMessage(self.message, msg)
             else:
                 attachmsg = True
@@ -382,7 +382,7 @@ class MirrorLeechListener:
                 await sendMessage(self.botpmmsg, msg + lmsg + fmsg)
                 await deleteMessage(self.botpmmsg)
                 if self.isSuperGroup:
-                    await sendMessage(self.message, f'{msg}<b>Files has been sent to your inbox</b>', iButton.build_menu(1))
+                    await sendMessage(self.message, f'{msg}<blockquote><b>Files has been sent to your inbox</b></blockquote>', iButton.build_menu(1))
                 else:
                     await deleteMessage(self.botpmmsg)
             if self.seed:
@@ -423,7 +423,7 @@ class MirrorLeechListener:
             await sendMessage(self.botpmmsg, msg, button, 'Random')
             await deleteMessage(self.botpmmsg)
             if self.isSuperGroup:
-                await sendMessage(self.message, f'{msg} <b>Links has been sent to your inbox</b>', iButton.build_menu(1))
+                await sendMessage(self.message, f'{msg} <blockquote> <b>Links has been sent to your inbox</b> </blockquote>', iButton.build_menu(1))
             else:
                 await deleteMessage(self.botpmmsg)
             if self.seed:
